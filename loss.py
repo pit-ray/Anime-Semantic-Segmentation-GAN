@@ -51,10 +51,12 @@ def gen_loss(opt, fake_d, real_g, fake_g, eps=1e-12, observer=None):
 
     adv_loss = fake_loss
 
+    adv_loss *= opt.adv_coef
+
     #cross-entropy loss
     ce_loss = -F.mean(real_g * F.log(fake_g + eps))
 
-    loss = opt.adv_coef*adv_loss + ce_loss
+    loss = adv_loss + ce_loss
 
     if observer is not None:
         report({'loss': loss,
@@ -98,7 +100,11 @@ def gen_semi_loss(opt, unlabel_d, unlabel_g, eps=1e-12, observer=None):
 
     adv_loss = fake_loss
 
-    loss = opt.semi_adv_coef*adv_loss + opt.semi_st_coef*st_loss
+    #weight
+    adv_loss *= opt.semi_adv_coef
+    st_loss *= opt.semi_st_coef
+
+    loss = adv_loss + st_loss
 
     if observer is not None:
         report({'semi_loss': loss,

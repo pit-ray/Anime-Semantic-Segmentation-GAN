@@ -1,6 +1,7 @@
 #coding: utf-8
 import chainer.training.extensions as ex
 from chainer.iterators import SerialIterator
+from chainer.optimizer_hooks import WeightDecay
 from chainer.optimizers import Adam
 from chainer.training import PRIORITY_READER, Trainer
 
@@ -8,7 +9,7 @@ from datasets import get_dataset, get_unlabel_dataset
 from discriminator import FCN
 from functions import adam_lr_poly
 from generator import DilatedFCN, ResNetDeepLab, UNet
-from options import get_option
+from options import get_options
 from updater import AdvSemiSeg_Updater
 
 
@@ -32,6 +33,8 @@ def train(opt):
         gen.to_gpu(device) #use GPU
     g_optim = Adam(alpha=opt.g_lr, beta1=opt.g_beta1, beta2=opt.g_beta2)
     g_optim.setup(gen)
+    if opt.g_weight_decay > 0:
+        g_optim.add_hook(WeightDecay(opt.g_weight_decay))
 
     dis = FCN(opt)
     if device != -1:
@@ -45,7 +48,6 @@ def train(opt):
         device=device)
 
     trainer = Trainer(updater, (opt.max_epoch, 'epoch'), out=opt.out_dir)
-
 
     #chainer training extensions
     trainer.extend(ex.LogReport(log_name=None, trigger=(1, 'iteration')))

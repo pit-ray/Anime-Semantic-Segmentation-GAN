@@ -59,9 +59,9 @@ class AdvSemiSeg_Updater(StandardUpdater):
             unlabel_g = g_opt.target(unlabel_x)
             unlabel_d = d_opt.target(unlabel_g)
 
-            self.semi_img4save = (cuda.to_cpu(unlabel_x.array[0]),
+            self.semi_img4save = [cuda.to_cpu(unlabel_x.array[0]),
                                   None,
-                                  cuda.to_cpu(unlabel_g.array[0]))
+                                  cuda.to_cpu(unlabel_g.array[0])]
 
             #semi-supervised loss
             semi_loss = gen_semi_loss(self.opt, unlabel_d, unlabel_g, observer=g_opt.target)
@@ -98,11 +98,11 @@ class AdvSemiSeg_Updater(StandardUpdater):
         for l in lines:
             for i, sect in enumerate(l):
                 if sect is None:
-                    sect = np.zeros_like(l[0].shape)
+                    l[i] = np.zeros_like(l[0])
+                    continue
 
                 if i != 0:
                     sect = onehot2label(sect)
-
                 l[i] = np.transpose(sect, (1, 2, 0))
 
             l = np.concatenate(l, axis=1)

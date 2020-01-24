@@ -18,6 +18,7 @@ def get_options():
     parser.add_argument('--g_lr', type=float, default=2.5*1e-4, help='learning rate of adam optimizer in order to train generator')
     parser.add_argument('--g_beta1', type=float, default=0.9, help='beta1 of adam optimizer in order to train generator')
     parser.add_argument('--g_beta2', type=float, default=0.99, help='beta2 of adam optimizer in order to train generator')
+    parser.add_argument('--g_weight_decay', type=float, default=1e-4, help='it penalizes complexity to generater loss function in order to prevent overfitting. if its option is zero, not apply weight decay.')
 
     parser.add_argument('--d_lr', type=float, default=1e-4, help='learning rate of adam optimizer in order to train discriminator')
     parser.add_argument('--d_beta1', type=float, default=0.9, help='beta1 of adam optimizer in order to train discriminator')
