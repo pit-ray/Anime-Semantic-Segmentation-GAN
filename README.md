@@ -20,6 +20,6 @@ This result is obtained by training by Pretrained-ResNet101-DeepLab-v3.
 Additionaly, parameters of the upper rusult is almost same as default value of options.py.
 
 # How to train
-You create 'dataset' directory and prepair dataset. Next, you set dataset path to option of command.<br>
+You create 'dataset' directory and prepare dataset. Next, you set dataset path to option of command.<br>
 Example) <br>
 `Python3 train.py --dataset_dir dataset/example --unlabel_dataset_dir dataset/unlabel_example`<br>
