@@ -97,6 +97,7 @@ class AdvSemiSeg_Updater(StandardUpdater):
         tile_img = None
         for l in lines:
             for i, sect in enumerate(l):
+                #l[0] = (l[0] + 1) * 0.5
                 if sect is None:
                     l[i] = np.zeros_like(l[0])
                     continue

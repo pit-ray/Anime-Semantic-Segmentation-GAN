@@ -56,6 +56,10 @@ def train(opt):
     trainer.extend(ex.PlotReport(['gen/adv_loss', 'dis/adv_loss', 'gen/semi_adv_loss'],
         x_key='iteration', file_name='adversarial_loss.png', trigger=(100, 'iteration')))
 
+    #test
+    trainer.extend(ex.PlotReport(['gen/adv_loss' ],
+        x_key='iteration', file_name='adv_gen_loss.png', trigger=(100, 'iteration')))
+
     trainer.extend(ex.PlotReport(['gen/ce_loss'],
         x_key='iteration', file_name='cross_entropy_loss.png', trigger=(100, 'iteration')))
 

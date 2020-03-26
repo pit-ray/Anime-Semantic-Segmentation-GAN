@@ -1,5 +1,6 @@
 #coding: utf-8
 from chainer import Chain
+from chainer.backends import cuda
 from chainer.initializers import HeNormal
 import chainer.functions as F
 import chainer.links as L
@@ -34,7 +35,23 @@ class ResNetDeepLab(Chain):
 
         self.activation = F.leaky_relu
 
+    def prepare(self, variable_img):
+        #out = F.resize_images(variable_img, (224, 224))
+        out = variable_img
+        #out = (out + 1) * 0.5
+        out = out[:, ::-1, :, :]
+        out = F.transpose(out, (0, 2, 3, 1))
+
+        out *= 255
+        xp = cuda.get_array_module(variable_img.array)
+        out -= xp.array([103.063, 115.903, 123.152], dtype=variable_img.dtype)
+
+        out = F.transpose(out, (0, 3, 1, 2))
+
+        return out
+
     def __call__(self, x):
+        x = self.prepare(x)
         h = self.resnet101(x, [self.use_layer[0]])[self.use_layer[0]]
         h = self.activation(h)
 

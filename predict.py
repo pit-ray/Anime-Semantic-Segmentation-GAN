@@ -49,7 +49,7 @@ def main():
     out_predict_dir = 'out'
     batch_size = 1
     device = 0
-    gen_npz = 'gen_snapshot_epoch-50.npz'
+    gen_npz = 'gen_snapshot_epoch-325.npz'
 
     opt = get_options()
 
