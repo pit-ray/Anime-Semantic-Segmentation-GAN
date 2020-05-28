@@ -42,7 +42,7 @@ if __name__ == '__main__':
 
     #Discriminator
     print('[Message] Now downloading Discriminator\'s weight... (about 5MB)')
-    #download(dis_id, dis_path)
+    download(dis_id, dis_path)
 
     #Generator
     print('[Message] Now downloading Generator\'s weight... (about 200MB)')
