@@ -34,7 +34,7 @@ python predict.py
 `predict.py` creates predicted images from `predict_from` directory to `predict_to`.  
 In addition, sources are assumed 256 x 256 white-background png.  
   
-## Sample
+#### Sample
 You are able to download a sample image from `safebooru.org`.  
 ```
 python get_sample_data.py  
