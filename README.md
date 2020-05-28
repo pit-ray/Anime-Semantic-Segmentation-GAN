@@ -15,6 +15,31 @@ This result is obtained by training by Pretrained-ResNet101-DeepLab-v3 and it is
 
 Additionaly, parameters of the upper result is almost same as default value of options.py.
 
+Thanks for your comment!  
+
+## pretrained weights  
+I prepared pre-trained weights of Generator and Discriminator and added scripts in order to get these weights.  
+You can get them by executing a following command.  
+```
+python get_pretrained_weight.py  
+```
+Totally about 200MB, so it may take few minutes.   
+
+
+## How to predict  
+If you want pre-trained model to predict, please do a next python script.   
+```
+python predict.py  
+```
+`predict.py` creates predicted images from `predict_from` directory to `predict_to`.  
+In addition, sources are assumed 256 x 256 white-background png.  
+  
+## Sample
+You are able to download a sample image from `safebooru.org`.  
+```
+python get_sample_data.py  
+```  
+
 ## How to train
 Please create 'dataset' directory and prepare dataset. Next, you can set dataset path to option of command.<br>
 Example) <br>
