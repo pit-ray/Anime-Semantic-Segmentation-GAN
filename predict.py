@@ -1,22 +1,22 @@
 #coding: utf-8
+import os
 import sys
+
 import chainer
 import chainer.training.extensions as ex
+import cupy as cp
+import numpy as np
 from chainer import iterators, optimizer_hooks, optimizers, training
+from PIL import Image
+from glob import glob
 
+import cv2
+from datasets import get_dataset, get_unlabel_dataset
+from functions import onehot2label
+from generator import ResNetDeepLab
 from options import get_options
 
-from datasets import get_dataset, get_unlabel_dataset
-from generator import ResNetDeepLab
-from functions import onehot2label
-
-import numpy as np
-from PIL import Image
-import os
-import cupy as cp
-import cv2
-import numpy as np
-
+#in default, not removing
 def remove_noise(img, ksize=5):
     img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
     img_mask = cv2.medianBlur(img, ksize)
@@ -46,36 +46,36 @@ def is_exist_color(img, rgb_list, threshold_num=1):
     return out
 
 def main():
-    out_predict_dir = 'out'
+    out_dir = 'predict_to'
+    in_dir = 'predict_from'
     batch_size = 1
-    device = 0
-    gen_npz = 'gen_snapshot_epoch-325.npz'
+    gen_npz = 'pretrained/gen.npz'
 
     opt = get_options()
 
-    semi = get_unlabel_dataset(opt)
-    semi_iter = iterators.SerialIterator(semi, batch_size, shuffle=False, repeat=False)
-
     gen = ResNetDeepLab(opt)
-    gen.to_gpu(device)
-    chainer.serializers.load_npz(opt.out_dir + '/' + gen_npz, gen)
+    gen.to_gpu(0)
+    chainer.serializers.load_npz(gen_npz, gen)
+    gen.to_cpu()
 
-    os.makedirs(out_predict_dir, exist_ok=True)
     num = 0
     ksize = 5
 
-    out_dir = out_predict_dir + '/concated-new'
     os.makedirs(out_dir, exist_ok=True)
-    for i in range(len(semi)):
-        print(i)
-        batch = semi_iter.next()
-        x = chainer.dataset.concat_examples(batch, device)
-        x = chainer.Variable(x.astype('float32'))
+
+    files = glob(in_dir + '/*.*')
+
+    for filename in files:
+        print(filename)
+
+        img_array = np.array(Image.open(filename), dtype='float32')
+        img_array = img_array.transpose((2, 0, 1)) / 255
+        x = chainer.Variable(img_array[np.newaxis, :3, :, :])
 
         out = gen(x)
 
-        onehot = cp.asnumpy(out.array[0])
-        x = cp.asnumpy(x.array[0])
+        onehot = out.array[0]
+        x = x.array[0]
 
         out = onehot2label(onehot)
 
@@ -95,12 +95,13 @@ def main():
             continue
 
         out = np.transpose(out * 255, (1, 2, 0)).astype('uint8')
-        out = remove_noise(out, ksize=ksize)
+        #out = remove_noise(out, ksize=ksize)
+
         #exist eye ?
         if not is_exist_color(out, [255, 0, 0], threshold_num=32):
             print('not exist eye')
             continue
-            
+
         #exist face ?
         if not is_exist_color(out, [0, 255, 0], threshold_num=100):
             print('not exist face')
@@ -122,4 +123,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
