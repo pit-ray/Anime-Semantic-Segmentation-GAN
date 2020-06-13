@@ -15,7 +15,6 @@ This result is obtained by training by Pretrained-ResNet101-DeepLab-v3 and it is
 
 Additionaly, parameters of the upper result is almost same as default value of options.py.
 
-Thanks for your comment!  
 
 ## pretrained weights  
 I prepared pre-trained weights of Generator and Discriminator and added scripts in order to get these weights.  
