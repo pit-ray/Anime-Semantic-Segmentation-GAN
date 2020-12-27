@@ -22,7 +22,7 @@ You can get them by executing a following command.
 ```
 python get_pretrained_weight.py  
 ```
-Totally about 200MB, so it may take few minutes.   
+Totally about 200MB, so it may take a few minutes.   
 
 
 ## How to predict  
