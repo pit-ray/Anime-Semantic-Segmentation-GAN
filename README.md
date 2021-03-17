@@ -50,7 +50,7 @@ Python3 train.py --dataset_dir dataset/example --unlabel_dataset_dir dataset/unl
 ## Environment
 ||details|
 |---|---|
-|OS|Windows10 Home|
+|OS|Windows10 Home 1909|
 |CPU|AMD Ryzen 2600|
 |GPU|MSI GTX 960 4GB|
 |language|Python 3.7.1|
