@@ -15,6 +15,13 @@ This result is obtained by training by Pretrained-ResNet101-DeepLab-v3 and it is
 
 Additionaly, parameters of the upper result is almost same as default value of options.py.
 
+#### Fine cases
+<img src="https://cdn-ak.f.st-hatena.com/images/fotolife/p/pit-ray/20210321/20210321123928.jpg" height=300>
+
+#### Failure cases
+<img src="https://cdn-ak.f.st-hatena.com/images/fotolife/p/pit-ray/20210321/20210321124035.jpg" height=300>
+
+
 
 ## pretrained weights  
 I prepared pre-trained weights of Generator and Discriminator and added scripts in order to get these weights.  
