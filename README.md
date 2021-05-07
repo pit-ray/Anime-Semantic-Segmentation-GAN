@@ -15,10 +15,10 @@ This result is obtained by training by Pretrained-ResNet101-DeepLab-v3 and it is
 
 Additionaly, parameters of the upper result is almost same as default value of options.py.
 
-#### Fine cases
+#### Fine cases (Simple, White background)  
 <img src="https://cdn-ak.f.st-hatena.com/images/fotolife/p/pit-ray/20210321/20210321123928.jpg" height=300>
 
-#### Failure cases
+#### Failure cases (Complex, Non-white background, Full face image)
 <img src="https://cdn-ak.f.st-hatena.com/images/fotolife/p/pit-ray/20210321/20210321124035.jpg" height=300>
 
 
