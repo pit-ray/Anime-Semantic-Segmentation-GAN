@@ -2,9 +2,10 @@
 
 ## Method
 This architecture is based on <a href="https://arxiv.org/abs/1802.07934">arXiv:1802.07934, 2018.</a><br>
-It was implemented to perform semantic segmentation for pixiv anime illust.<br>
 
-This GAN architectures are placed in `generator.py` and `discriminator.py`, training architecture are been `updater.py` or `loss.py`, and hyper-parameter is been `options.py`.
+And this repository was implemented to perform semantic segmentation for pixiv anime illust.<br>
+
+GAN architectures are placed in `generator.py` and `discriminator.py`, training architecture are been `updater.py` or `loss.py`, and hyper-parameter is been `options.py`.
 
 The details of this architecture exist <a href="https://www.pit-ray.com/entry/semi-seg" target="_blank">my blog</a> in Japanese.
 
