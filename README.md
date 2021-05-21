@@ -12,7 +12,7 @@ The details of this architecture exist <a href="https://www.pit-ray.com/entry/se
 
 ## Result
 <img src="https://cdn-ak.f.st-hatena.com/images/fotolife/p/pit-ray/20200124/20200124213414.jpg"></img><br>
-This result is obtained by training by Pretrained-ResNet101-DeepLab-v3 and it is output of unannotated anime illust.
+This result is obtained by training with Pretrained-ResNet101-DeepLab-v3 and it is output of unannotated anime illust.
 
 Additionaly, parameters of the upper result is almost same as default value of options.py.
 
