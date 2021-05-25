@@ -1,5 +1,4 @@
 from os import makedirs
-from shutil import copyfileobj
 import requests
 
 
@@ -27,6 +26,7 @@ def download(id, path):
             if content:
                 f.write(content)
 
+
 if __name__ == '__main__':
     dis_id = '1RKNIU6VWsDRcb0AiCWjEMrtTlhJCx_Hs'
     gen_id = '1k9WSqT8H2t5WSO_dfaERrA90N4R_nehO'
@@ -40,11 +40,11 @@ if __name__ == '__main__':
 
     print('[Message] Downloading pre trained weight (usually it may take few minutes)')
 
-    #Discriminator
+    # Discriminator
     print('[Message] Now downloading Discriminator\'s weight... (about 5MB)')
     download(dis_id, dis_path)
 
-    #Generator
+    # Generator
     print('[Message] Now downloading Generator\'s weight... (about 200MB)')
     download(gen_id, gen_path)
 

@@ -1,10 +1,9 @@
-#coding: utf-8
+# coding: utf-8
 import os
 
 from chainer.training import StandardUpdater
 from chainer import Variable
 
-import chainer.functions as F
 import numpy as np
 from PIL import Image
 
@@ -27,7 +26,7 @@ class AdvSemiSeg_Updater(StandardUpdater):
         g_opt = self.get_optimizer('gen')
         d_opt = self.get_optimizer('dis')
 
-        #predict
+        # predict
         x, real_g = self.real_batch('main')
         fake_g = g_opt.target(x)
 
@@ -38,13 +37,13 @@ class AdvSemiSeg_Updater(StandardUpdater):
         real_d = d_opt.target(real_g)
         fake_d = d_opt.target(fake_g)
 
-        #generator loss
+        # generator loss
         g_loss = gen_loss(self.opt, fake_d, real_g, fake_g, observer=g_opt.target)
         g_opt.target.cleargrads()
         g_loss.backward()
         g_opt.update()
 
-        #discriminator loss
+        # discriminator loss
         x.unchain_backward()
         fake_g.unchain_backward()
 
@@ -54,7 +53,7 @@ class AdvSemiSeg_Updater(StandardUpdater):
         d_opt.update()
 
         if self.learn_from_unlabel:
-            #predict
+            # predict
             unlabel_x, _ = self.real_batch('semi')
             unlabel_g = g_opt.target(unlabel_x)
             unlabel_d = d_opt.target(unlabel_g)
@@ -63,7 +62,7 @@ class AdvSemiSeg_Updater(StandardUpdater):
                                   None,
                                   cuda.to_cpu(unlabel_g.array[0])]
 
-            #semi-supervised loss
+            # semi-supervised loss
             semi_loss = gen_semi_loss(self.opt, unlabel_d, unlabel_g, observer=g_opt.target)
             g_opt.target.cleargrads()
             semi_loss.backward()
@@ -76,7 +75,7 @@ class AdvSemiSeg_Updater(StandardUpdater):
         if isinstance(batch, tuple) or isinstance(batch, list):
             x, t = batch
 
-            #16bit -> 32bit (not use tensor core)
+            # 16bit -> 32bit (not use tensor core)
             x = Variable(x.astype('float32'))
             t = Variable(t.astype('float32'))
 
@@ -97,7 +96,7 @@ class AdvSemiSeg_Updater(StandardUpdater):
         tile_img = None
         for l in lines:
             for i, sect in enumerate(l):
-                #l[0] = (l[0] + 1) * 0.5
+                # l[0] = (l[0] + 1) * 0.5
                 if sect is None:
                     l[i] = np.zeros_like(l[0])
                     continue

@@ -1,4 +1,4 @@
-#coding: utf-8
+# coding: utf-8
 import chainer.training.extensions as ex
 from chainer.iterators import SerialIterator
 from chainer.optimizer_hooks import WeightDecay
@@ -32,11 +32,11 @@ def train(opt):
 
 
     gen = ResNetDeepLab(opt)
-    #gen = DilatedFCN(opt)
-    #gen = UNet(opt)
+    # gen = DilatedFCN(opt)
+    # gen = UNet(opt)
 
     if device != -1:
-        gen.to_gpu(device) #use GPU
+        gen.to_gpu(device) # use GPU
     g_optim = Adam(alpha=opt.g_lr, beta1=opt.g_beta1, beta2=opt.g_beta2)
     g_optim.setup(gen)
     if opt.g_weight_decay > 0:
@@ -59,14 +59,14 @@ def train(opt):
     trainer = Trainer(updater, (opt.max_epoch, 'epoch'), out=opt.out_dir)
     print('[Message] initialized Trainer')
 
-    #chainer training extensions
+    # chainer training extensions
     trainer.extend(ex.LogReport(log_name=None, trigger=(1, 'iteration')))
     trainer.extend(ex.ProgressBar((opt.max_epoch, 'epoch'), update_interval=1))
 
     trainer.extend(ex.PlotReport(['gen/adv_loss', 'dis/adv_loss', 'gen/semi_adv_loss'],
         x_key='iteration', file_name='adversarial_loss.png', trigger=(100, 'iteration')))
 
-    #test
+    # test
     trainer.extend(ex.PlotReport(['gen/adv_loss' ],
         x_key='iteration', file_name='adv_gen_loss.png', trigger=(100, 'iteration')))
 
@@ -85,7 +85,7 @@ def train(opt):
     trainer.extend(ex.PlotReport(['gen/semi_loss'],
         x_key='epoch', file_name='semi_loss.png', trigger=(1, 'epoch')))
 
-    #snap
+    # snap
     trainer.extend(ex.snapshot_object(gen, 'gen_snapshot_epoch-{.updater.epoch}.npz'),
         trigger=(opt.snap_interval_epoch, 'epoch'))
     trainer.extend(ex.snapshot_object(dis, 'dis_snapshot_epoch-{.updater.epoch}.npz'),
@@ -101,7 +101,7 @@ def train(opt):
     print('[Message] initialized extension')
 
     print('[Message] start training ...')
-    trainer.run() #start learning
+    trainer.run() # start learning
 
 
 if __name__ == '__main__':

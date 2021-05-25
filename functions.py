@@ -1,15 +1,16 @@
-#coding: utf-8
+# coding: utf-8
 from chainer.backends import cuda
 
-#This parameter dependent on RGB-combination of label
-CLASS_COLOR = [[1, 0, 0], #eye
-               [0, 1, 0], #face
-               [0, 0, 1], #hair
-               [1, 0, 1], #other
-               [1, 1, 0]] #background
+# This parameter dependent on RGB-combination of label
+CLASS_COLOR = [[1, 0, 0], # eye
+               [0, 1, 0], # face
+               [0, 0, 1], # hair
+               [1, 0, 1], # other
+               [1, 1, 0]] # background
 BACKGROUND_INDEX = 4
 
-#the range of RGB is from zero to one.
+
+# the range of RGB is from zero to one.
 def label2onehot(label, threshold=0.4, skip_bg=False, dtype='uint8'):
     label = label > threshold
 
@@ -25,8 +26,7 @@ def label2onehot(label, threshold=0.4, skip_bg=False, dtype='uint8'):
         detecter = detecter.repeat(label.shape[1], axis=1)
         detecter = detecter.repeat(label.shape[2], axis=2)
 
-        mask = xp.sum(label == detecter,
-            axis=0, keepdims=True, dtype=dtype) == 3
+        mask = xp.sum(label == detecter, axis=0, keepdims=True, dtype=dtype) == 3
 
         if i == 0:
             onehot = mask
@@ -56,7 +56,7 @@ def onehot2label(onehot, skip_bg=False, dtype='uint8'):
 def adam_lr_poly(opt, trainer):
     epoch = trainer.updater.epoch_detail
     max_epoch = trainer.stop_trigger.period
-    
+ 
     threshold_epoch = max_epoch * opt.lr_poly_train_period
     if epoch < threshold_epoch:
         return

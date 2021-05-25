@@ -1,20 +1,21 @@
-#encoding: utf-8
+# encoding: utf-8
 from chainer import Chain
-from chainer.initializers import HeNormal, Normal
+from chainer.initializers import HeNormal
 import chainer.functions as F
 import chainer.links as L
 
 from spectral_norms import define_conv
 from atrous_conv import define_atrous_conv
 
+
 class ASPP(Chain):
     def __init__(self, opt, input_ch, input_resolution=65):
         super().__init__()
 
-        #get options
+        # get options
         nf = opt.aspp_nf
 
-        #this rate is dilate size based original paper.
+        # this rate is dilate size based original paper.
         x65_rate = [6, 12, 18]
         rate = [round(x * input_resolution / 65) for x in x65_rate]
 

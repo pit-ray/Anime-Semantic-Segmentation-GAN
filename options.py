@@ -1,18 +1,19 @@
-#coding: utf-8
+# coding: utf-8
 from argparse import ArgumentParser
+
 
 def get_options():
     parser = ArgumentParser()
     parser.add_argument('--use_cpu', action='store_true', help='for debug')
 
-    #dataset info
-    parser.add_argument('--dataset_dir', type=str, default='datasets/full', help='directory of dataset for normal training')
-    parser.add_argument('--unlabel_dataset_dir', type=str, default='datasets/face256', help='directory of dataset for semi-supervised trainig')
+    # dataset info
+    parser.add_argument('--dataset_dir', type=str, default='datasets/labels', help='directory of dataset for normal training')
+    parser.add_argument('--unlabel_dataset_dir', type=str, default='datasets/unlables', help='directory of dataset for semi-supervised trainig')
     parser.add_argument('--augment_data', type=bool, default=True, help='if this flag is true, annotated data is augmented.')
     parser.add_argument('--img_shape', type=tuple, default=(3, 256, 256), help='this tuple is limited int elements. the order is (channels, heights, widths)')
     parser.add_argument('--class_num', type=int, default=5, help='target object class of semantic segmentation')
 
-    #training hyper-parameter
+    # training hyper-parameter
     parser.add_argument('--batch_size', type=int, default=1, help='the number of traing samples utilized in one iteration')
 
     parser.add_argument('--g_lr', type=float, default=2.5*1e-4, help='learning rate of adam optimizer in order to train generator')
@@ -32,14 +33,14 @@ def get_options():
     parser.add_argument('--lr_poly_power', type=float, default=0.9, help='strongth of learning rate poly')
     parser.add_argument('--out_dir', type=str, default='result', help='directory of outputs')
 
-    #model archtecture hyper-parameter
+    # model archtecture hyper-parameter
     parser.add_argument('--conv_norm', type=str, default='spectral_norm_hook',
         help='convolution weight normalization type. [original] is typical convolution. [spectral_norm] is only used chainer.funcstions. [spectral_norm_hook] is based on chainer.link_hooks. there is details in spectral_norms.py.')
     parser.add_argument('--ngf', type=int, default=64, help='dimension of hidden feature map at generator')
     parser.add_argument('--ndf', type=int, default=64, help='dimension of hidden feature map at discriminator')
     parser.add_argument('--aspp_nf', type=int, default=256, help='dimension of hidden feature map at ASPP archtecture')
 
-    #loss hyper parameter
+    # loss hyper parameter
     parser.add_argument('--adv_loss_mode', type=str, default='hinge', help='adversarial loss approch. [bce] is binary-cross-entrtopy or softplus-loss. [mse] is mean-squered-error. [hinge] is hinge-loss')
     parser.add_argument('--adv_coef', type=float, default=0.01, help='adversarial loss cofficient for annotated data')
     parser.add_argument('--semi_adv_coef', type=float, default=0.001, help='adversarial loss cofficient for unlabeled data')

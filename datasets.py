@@ -1,4 +1,4 @@
-#coding: utf-8
+# coding: utf-8
 import os
 from glob import glob
 
@@ -37,23 +37,23 @@ def get_dataset(opt):
         x_array = img_array[:3, :, :256]
         t_array = img_array[:3, :, 256:]
 
-        #convert to onehot
+        # convert to onehot
         t_array = label2onehot(t_array, threshold=0.4, dtype='float16')
 
         x.append(x_array)
         t.append(t_array)
 
-        #Data-Augmentation
+        # Data-Augmentation
         if opt.augment_data:
-            #mirroring
+            # mirroring
             x.append(x_array[:, :, ::-1])
             t.append(t_array[:, :, ::-1])
 
-            #gamma-correction
+            # gamma-correction
             x.append(gamma_correction(x_array, gamma=2.5))
             t.append(t_array)
 
-            #mirroring and gamma correction
+            # mirroring and gamma correction
             x.append(gamma_correction(x_array[:, :, ::-1], gamma=2.5))
             t.append(t_array[:, :, ::-1])
 

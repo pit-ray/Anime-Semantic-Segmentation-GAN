@@ -1,11 +1,11 @@
-#coding: utf-8
+# coding: utf-8
 from chainer import report
 import chainer.functions as F
 from chainer.backends import cuda
 
 
 def dis_loss(opt, real_d, fake_d, observer=None):
-    #adversarial loss
+    # adversarial loss
     adv_loss = 0
     real_loss = 0
     fake_loss = 0
@@ -36,7 +36,7 @@ def dis_loss(opt, real_d, fake_d, observer=None):
 
 
 def gen_loss(opt, fake_d, real_g, fake_g, eps=1e-12, observer=None):
-    #adversarial loss
+    # adversarial loss
     adv_loss = 0
     fake_loss = 0
     if opt.adv_loss_mode == 'bce':
@@ -53,7 +53,7 @@ def gen_loss(opt, fake_d, real_g, fake_g, eps=1e-12, observer=None):
 
     adv_loss *= opt.adv_coef
 
-    #cross-entropy loss
+    # cross-entropy loss
     ce_loss = -F.mean(real_g * F.log(fake_g + eps))
 
     loss = adv_loss + ce_loss
@@ -68,11 +68,11 @@ def gen_loss(opt, fake_d, real_g, fake_g, eps=1e-12, observer=None):
 
 
 def gen_semi_loss(opt, unlabel_d, unlabel_g, eps=1e-12, observer=None):
-    #semi-supervised loss
-    #HW-filter
+    # semi-supervised loss
+    # HW-filter
     confidence_mask = F.sigmoid(unlabel_d).array > opt.semi_threshold
 
-    #C-filter (which does pixels belong to each class)
+    # C-filter (which does pixels belong to each class)
     class_num = unlabel_g.shape[1]
     xp = cuda.get_array_module(unlabel_g.array)
 
@@ -80,12 +80,12 @@ def gen_semi_loss(opt, unlabel_d, unlabel_g, eps=1e-12, observer=None):
     predict_mask = xp.eye(class_num,
         dtype=unlabel_g.dtype)[predict_index].transpose(0, 3, 1, 2)
 
-    #CHW-filter
+    # CHW-filter
     ground_truth = confidence_mask * predict_mask
 
     st_loss = -F.mean(ground_truth * F.log(unlabel_g + eps))
 
-    #adversarial loss
+    # adversarial loss
     adv_loss = 0
     fake_loss = 0
     if opt.adv_loss_mode == 'bce':
@@ -100,7 +100,7 @@ def gen_semi_loss(opt, unlabel_d, unlabel_g, eps=1e-12, observer=None):
 
     adv_loss = fake_loss
 
-    #weight
+    # weight
     adv_loss *= opt.semi_adv_coef
     st_loss *= opt.semi_st_coef
 

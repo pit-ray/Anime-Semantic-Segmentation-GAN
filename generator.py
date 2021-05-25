@@ -1,4 +1,4 @@
-#coding: utf-8
+# coding: utf-8
 from chainer import Chain
 from chainer.backends import cuda
 from chainer.initializers import HeNormal
@@ -6,8 +6,9 @@ import chainer.functions as F
 import chainer.links as L
 
 from architecture import ASPP, PixelShuffler
-from spectral_norms import define_conv, define_deconv
+from spectral_norms import define_conv
 from atrous_conv import define_atrous_conv
+
 
 class ResNetDeepLab(Chain):
     def __init__(self, opt):
@@ -28,17 +29,17 @@ class ResNetDeepLab(Chain):
             self.norm2 = L.BatchNormalization(nf)
 
             self.aspp = ASPP(opt, nf, input_resolution=32)
-            self.up1 = PixelShuffler(opt, nf, nf // 2, rate=2) #32 -> 64
-            self.up2 = PixelShuffler(opt, nf // 2, nf // 4, rate=2) #64 -> 128
+            self.up1 = PixelShuffler(opt, nf, nf // 2, rate=2) # 32 -> 64
+            self.up2 = PixelShuffler(opt, nf // 2, nf // 4, rate=2) # 64 -> 128
             self.up3 = PixelShuffler(opt, nf // 4, nf // 8, rate=2) # 128 -> 256
             self.to_class = define_conv(opt)(nf // 8, opt.class_num, ksize=3, pad=1, initialW=he_w)
 
         self.activation = F.leaky_relu
 
     def prepare(self, variable_img):
-        #out = F.resize_images(variable_img, (224, 224))
+        # out = F.resize_images(variable_img, (224, 224))
         out = variable_img
-        #out = (out + 1) * 0.5
+        # out = (out + 1) * 0.5
         out = out[:, ::-1, :, :]
         out = F.transpose(out, (0, 2, 3, 1))
 
@@ -90,35 +91,35 @@ class DilatedFCN(Chain):
         ngf = opt.ngf
 
         with self.init_scope():
-            #[input] 3 x 256 x 256
+            # [input] 3 x 256 x 256
             self.c1 = define_conv(opt)(opt.img_shape[0], ngf, ksize=4, stride=2, pad=1, initialW=he_w)
             self.norm1 = L.BatchNormalization(ngf)
 
-            #[input] ngf x 128 x 128
+            # [input] ngf x 128 x 128
             self.c2 = define_conv(opt)(ngf, ngf * 2, ksize=4, stride=2, pad=1, initialW=he_w)
             self.norm2 = L.BatchNormalization(ngf * 2)
 
-            #[input] ngf*2 x 64 x 64
+            # [input] ngf*2 x 64 x 64
             self.c3 = define_conv(opt)(ngf * 2, ngf * 4, ksize=4, stride=2, pad=1, initialW=he_w)
             self.norm3 = L.BatchNormalization(ngf * 4)
 
-            #[input] ngf*4 x 32 x 32
+            # [input] ngf*4 x 32 x 32
             self.a1 = define_atrous_conv(opt)(ngf * 4, ngf * 4, ksize=3, rate=2, initialW=he_w)
             self.norm4 = L.BatchNormalization(ngf * 4)
 
-            #[input] ngf*4 x 32 x 32
+            # [input] ngf*4 x 32 x 32
             self.a2 = define_atrous_conv(opt)(ngf * 4, ngf * 4, ksize=3, rate=4, initialW=he_w)
             self.norm5 = L.BatchNormalization(ngf * 4)
 
-            #[input] ngf*4 x 32 x 32
+            # [input] ngf*4 x 32 x 32
             resolution = max(opt.img_shape[1], opt.img_shape[2]) // 2 ** down_sampling_num
             self.aspp = ASPP(opt, ngf * 4, input_resolution=resolution)
 
-            #[input] ngf*4 x 32 x 32
-            self.up1 = PixelShuffler(opt, ngf * 4, ngf * 2, rate=2) #64 -> 128
+            # [input] ngf*4 x 32 x 32
+            self.up1 = PixelShuffler(opt, ngf * 4, ngf * 2, rate=2) # 64 -> 128
             self.up2 = PixelShuffler(opt, ngf * 2, ngf, rate=2) # 128 -> 256
             self.to_class = define_conv(opt)(ngf, opt.class_num, ksize=3, pad=1, initialW=he_w)
-            #[output] class_num x 256 x 256
+            # [output] class_num x 256 x 256
 
         self.activation = F.relu
 
@@ -164,52 +165,52 @@ class UNet(Chain):
         he_w = HeNormal()
         ngf = opt.ngf
         with self.init_scope():
-            #Encoder
-            #[input] 3 x 256 x 256 
+            # Encoder
+            # [input] 3 x 256 x 256 
             self.e1 = define_conv(opt)(opt.input_ch, ngf, ksize=3, stride=1, pad=1, initialW=he_w)
             self.e1_bn = L.BatchNormalization(ngf)
 
-            #[input] ngf x 256 x 256 
+            # [input] ngf x 256 x 256 
             self.e2 = define_conv(opt)(ngf, ngf * 2, ksize=4, stride=2, pad=1, initialW=he_w)
             self.e2_bn = L.BatchNormalization(ngf * 2)
 
-            #[input] ngf*2 x 128 x 128 
+            # [input] ngf*2 x 128 x 128 
             self.e3 = define_conv(opt)(ngf * 2, ngf * 4, ksize=4, stride=2, pad=1, initialW=he_w)
             self.e3_bn = L.BatchNormalization(ngf * 4)
 
-            #[input] ngf*4 x 64 x 64 
+            # [input] ngf*4 x 64 x 64 
             self.e4 = define_conv(opt)(ngf * 4, ngf * 8, ksize=4, stride=2, pad=1, initialW=he_w)
             self.e4_bn = L.BatchNormalization(ngf * 8)
 
-            #[input] ngf*8 256 x 32 x 32 
+            # [input] ngf*8 256 x 32 x 32 
             self.e5 = define_conv(opt)(ngf * 8, ngf * 16, ksize=4, stride=2, pad=1, initialW=he_w)
             self.e5_bn = L.BatchNormalization(ngf * 16)
 
-            #Decoder
-            #[input] ngf*16 x 16 x 16 
+            # Decoder
+            # [input] ngf*16 x 16 x 16 
             self.d1 = L.Deconvolution2D(ngf * 16, ngf * 8, ksize=4, stride=2, pad=1, initialW=he_w)
             self.d1_bn = L.BatchNormalization(ngf * 8)
 
-            #[input] ngf*8*2 x 32 x 32 (concat)
+            # [input] ngf*8*2 x 32 x 32 (concat)
             self.d2 = L.Deconvolution2D(ngf * 8 * 2, ngf * 4, ksize=4, stride=2, pad=1, initialW=he_w)
             self.d2_bn = L.BatchNormalization(ngf * 4)
 
-            #[input] ngf*4*2 x 64 x 64 (concat)
+            # [input] ngf*4*2 x 64 x 64 (concat)
             self.d3 = L.Deconvolution2D(ngf * 4 * 2, ngf * 2, ksize=4, stride=2, pad=1, initialW=he_w)
             self.d3_bn = L.BatchNormalization(ngf * 2)
 
-            #[input] ngf*2*2 x 128 x 128 (concat)
+            # [input] ngf*2*2 x 128 x 128 (concat)
             self.d4 = L.Deconvolution2D(ngf * 2 * 2, ngf, ksize=4, stride=2, pad=1, initialW=he_w)
             self.d4_bn = L.BatchNormalization(ngf)
 
-            #[input] ngf x 256 x 256
+            # [input] ngf x 256 x 256
             self.to_class = define_conv(opt)(ngf, opt.nclass, ksize=3, pad=1, initialW=he_w)
-            #[output] nclass x 256 x 256
+            # [output] nclass x 256 x 256
 
         self.activation = F.relu
 
     def __call__(self, x):
-        #Encoder
+        # Encoder
         eh1 = self.e1(x)
         eh1 = self.e1_bn(eh1)
         eh1 = self.activation(eh1)
@@ -230,7 +231,7 @@ class UNet(Chain):
         eh5 = self.e5_bn(eh5)
         eh5 = self.activation(eh5)
 
-        #Decoder
+        # Decoder
         dh1 = self.d1(eh5)
         dh1 = self.d1_bn(dh1)
         dh1 = F.dropout(dh1)
