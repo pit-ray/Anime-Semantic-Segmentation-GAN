@@ -1,7 +1,7 @@
 # Anime-Semantic-Segmentation-GAN
 
 ## Method
-This architecture is based on <a href="https://arxiv.org/abs/1802.07934">arXiv:1802.07934, 2018.</a><br>
+This architecture is based on <a href="https://arxiv.org/abs/1802.07934">arXiv:1802.07934, 2018</a> and its [official code](https://github.com/hfslyc/AdvSemiSeg).<br>
 
 And this repository was implemented to perform semantic segmentation for pixiv anime illust.<br>
 
