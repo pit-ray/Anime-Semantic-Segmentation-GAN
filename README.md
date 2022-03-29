@@ -7,7 +7,7 @@ And this repository was implemented to perform semantic segmentation for pixiv a
 
 GAN architectures are placed in `generator.py` and `discriminator.py`, training architecture are been `updater.py` or `loss.py`, and hyper-parameter is been `options.py`.
 
-The details of this architecture exist <a href="https://www.pit-ray.com/entry/semi-seg" target="_blank">my blog</a> in Japanese.
+The details of this architecture exist <a href="https://pit-ray.hatenablog.com/entry/semi-seg" target="_blank">my blog</a> in Japanese.
 
 
 ## Result
